@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>tasks</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<table id="table" class="table table-striped">
+    <caption><H1>tasks</H1></caption>
+    <tr>
+        <th data-field="taskSignature">taskSignature</th>
+        <th data-field="expression">Expression</th>
+        <th data-field="count">Count</th>
+        <th data-field="lastExecutionTime">LastExecutionTime</th>
+        <th data-field="costTime">CostTime</th>
+        <th data-field="url">
+            <select id="instances">
+            </select>
+        </th>
+    </tr>
+</table>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.13.4/dist/bootstrap-table.min.js"></script>
+<script>
+    $.get("/tasks/list", function (datas) {
+        for (const a in datas) {
+            $('#table').append('<tr><td>' + datas[a]["taskSignature"] + '</td><td>' + datas[a]["expression"] + '</td><td>' + datas[a]["count"] + '</td><td>' + datas[a]["lastExecutionTime"] + '</td><td>' + datas[a]["costTime"] + '</td><td><button onclick=runTasks("' + datas[a]["url"] + '")>马上执行</button></td></tr>>')
+        }
+        return datas;
+    });
+    $.get("/instances", function (datas) {
+        for (const a in datas) {
+            $('#instances').append('<option value ="' + datas[a]["ip"] + ':' + datas[a]["port"] + '">' + datas[a]["ip"] + ':' + datas[a]["port"] + '</option>');
+        }
+        return datas;
+    });
+
+    function runTasks(url) {
+        if (null != name) {
+            $.get(url + '&IpAndPort=' + $('#instances option:selected').val(), function (data) {
+                alert(JSON.stringify(data));
+                location.reload();
+            });
+        }
+    }
+</script>
+</body>
+</html>
